@@ -1,0 +1,73 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Proxy.Domain.Interface.Managers;
+using Proxy.Domain.Interface.Repository;
+using Proxy.Domain.Managers;
+using Proxy.Infrastructure.Repositories;
+using Proxy.Web.Interface.Services;
+using Proxy.Web.Services;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+
+namespace Proxy.Web.Extensions
+{
+    public static class ServiceExtension
+    {
+        public static void AddAppServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            //Add Managers
+            services.AddScoped<IAccountManager, AccountManager>();
+
+            //Add Repositories
+            services.AddScoped<IInMemoryUserRepository, InMemoryUserRepository>();
+
+            //Add Services
+            var jwtOptions = configuration.GetSection("Jwt").Get<TokenService.Options>();
+            services.AddScoped<ITokenService, TokenService>(_ => new TokenService(jwtOptions));
+        }
+        public static void AddSwagger(this IServiceCollection services)
+        {
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Proxy API", Version = "v1" });
+                c.CustomSchemaIds((type) => type.IsNested ? type.FullName : type.Name);
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                OpenApiSecurityScheme securityDefinition = new OpenApiSecurityScheme()
+                {
+                    Name = "Bearer",
+                    BearerFormat = "JWT",
+                    Scheme = "bearer",
+                    Description = "Specify the authorization token.",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                };
+
+                OpenApiSecurityRequirement securityRequirements = new OpenApiSecurityRequirement()
+                {
+                    { securityDefinition, Array.Empty<string>()},
+                };
+
+                c.AddSecurityRequirement(securityRequirements);
+            });
+        }
+    }
+}
