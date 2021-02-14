@@ -9,8 +9,9 @@ namespace Proxy.Infrastructure.Repositories
 {
     public class InMemoryUserRepository : IInMemoryUserRepository
     {
-        //This could have be database context injected.
-        //This In-Memory user could be query from database or any data store.
+        //This isusually the  database context to be injected here
+        //This In-Memory list of user is just for testing purpose
+        ///It should be from the database or any file system
         private IEnumerable<User> _inMemoryUsers;
 
         public InMemoryUserRepository()
@@ -18,7 +19,7 @@ namespace Proxy.Infrastructure.Repositories
             _inMemoryUsers = new List<User>()
             {
                 new User{ Id = 1, Username="test-proxy", Password="password"},
-                new User{ Id = 1, Username="test-proxy2", Password="password2"}
+                new User{ Id = 2, Username="test-proxy2", Password="password2"}
                 //...........
                 ///........
             };
