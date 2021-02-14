@@ -25,26 +25,25 @@ Sample Request body:
 
 Copy the token and add it to Authorization header Bearer token in Postman or any other rest client.
 
-Http GET request: use this Url http://localhost:5000/api/messages returns all log messages.
+HTTP GET request:  http://localhost:5000/api/messages returns all log messages.
 
-Http GET request: http://localhost:5000/api/messages?maxRecords=10&view=Grid%20view returns log messages with filter based on query string on the url.
+HTTP GET request: http://localhost:5000/api/messages?maxRecords=10&view=Grid%20view returns log messages with filter based on query string on the url.
 
-Http POST request: use the url http://localhost:5000/api/messages.
+HTTP POST request:  http://localhost:5000/api/messages.
 
 Sample Request body:
-
-{
-  "messages": [
     {
-      "title": "Test message summary1",
-      "text": "Exceptiion yyy at ...1"
-    },
-    {
-      "title": "Test message summary2",
-      "text": "Exceptiion yyy at ...2"
+      "messages": [
+        {
+          "title": "Test message summary1",
+          "text": "Exceptiion yyy at ...1"
+        },
+        {
+          "title": "Test message summary2",
+          "text": "Exceptiion yyy at ...2"
+        }
+      ]
     }
-  ]
-}
 
 
 
