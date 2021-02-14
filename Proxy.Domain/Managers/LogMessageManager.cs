@@ -58,6 +58,7 @@ namespace Proxy.Domain.Managers
                 Records = records
             };
 
+            logMessages.Validate();
             var response = await _service.SendLogsAsync(logMessages);
             if (response != null)
             {
