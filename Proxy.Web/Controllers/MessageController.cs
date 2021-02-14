@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Proxy.Web.Controllers.API
+namespace Proxy.Web.Controllers
 {
     [Route("api/messages")]
     [ApiController]

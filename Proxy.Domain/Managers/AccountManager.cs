@@ -10,9 +10,9 @@ namespace Proxy.Domain.Managers
 {
     public class AccountManager : IAccountManager
     {
-        private readonly IInMemoryUserRepository _userRepo;
+        private readonly IUserRepository _userRepo;
 
-        public AccountManager(IInMemoryUserRepository userRepo)
+        public AccountManager(IUserRepository userRepo)
         {
             _userRepo = userRepo;
         }

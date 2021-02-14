@@ -30,7 +30,7 @@ namespace Proxy.Web.Extensions
             services.AddScoped<IAccountManager, AccountManager>();
 
             //Add Repositories
-            services.AddScoped<IInMemoryUserRepository, InMemoryUserRepository>();
+            services.AddScoped<IUserRepository, InMemoryUserRepository>();
             
             //Add Services
             var jwtOptions = configuration.GetSection("Jwt").Get<TokenService.Options>();

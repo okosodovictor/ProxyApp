@@ -7,11 +7,13 @@ using System.Text;
 
 namespace Proxy.Infrastructure.Repositories
 {
-    public class InMemoryUserRepository : IInMemoryUserRepository
+    /// <summary>
+    /// This isusually the  database context to be injected here
+    /// This In-Memory list of user is just for demonstration purpose purpose
+    /// It should be from the database or any file system
+    /// </summary>
+    public class InMemoryUserRepository : IUserRepository
     {
-        //This isusually the  database context to be injected here
-        //This In-Memory list of user is just for testing purpose
-        ///It should be from the database or any file system
         private IEnumerable<User> _inMemoryUsers;
 
         public InMemoryUserRepository()

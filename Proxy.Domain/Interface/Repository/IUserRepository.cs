@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Proxy.Domain.Interface.Repository
 {
-    public interface IInMemoryUserRepository
+    public interface IUserRepository
     {
         User GetUser(string username, string password);
     }

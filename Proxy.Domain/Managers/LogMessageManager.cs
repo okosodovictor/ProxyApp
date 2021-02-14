@@ -27,7 +27,7 @@ namespace Proxy.Domain.Managers
                 return result;
             }
 
-            return await Task.FromResult<LogMessageResponse>(null);
+            return null;
         }
 
         public async Task<LogMessageResponse> SendLogMessageAsync(Message[] messages)
@@ -53,20 +53,20 @@ namespace Proxy.Domain.Managers
             }).ToArray();
 
             //log message
-            var logMessages = new LogMessageRequest()
+            var logRequest = new LogMessageRequest()
             {
                 Records = records
             };
 
-            logMessages.Validate();
-            var response = await _service.SendLogsAsync(logMessages);
+            logRequest.Validate();
+            var response = await _service.SendLogsAsync(logRequest);
             if (response != null)
             {
                 var result = JsonConvert.DeserializeObject<LogMessageResponse>(response);
                 return result;
             }
 
-            return await Task.FromResult<LogMessageResponse>(null);
+            return null;
         }
     }
 }

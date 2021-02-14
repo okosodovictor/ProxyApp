@@ -6,10 +6,10 @@ using Moq;
 using Proxy.Domain.Interface.Managers;
 using Proxy.Domain.Models;
 using Microsoft.Extensions.Logging;
-using Proxy.Web.Controllers.API;
 using Proxy.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Proxy.Web.Controllers;
 
 namespace Proxy.Tests.Controllers
 {
