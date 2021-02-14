@@ -1,16 +1,22 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 using Proxy.Domain.Interface.Managers;
 using Proxy.Domain.Interface.Repository;
+using Proxy.Domain.Interface.Services;
 using Proxy.Domain.Managers;
 using Proxy.Infrastructure.Repositories;
+using Proxy.Infrastructure.Services;
 using Proxy.Web.Interface.Services;
 using Proxy.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -25,11 +31,20 @@ namespace Proxy.Web.Extensions
 
             //Add Repositories
             services.AddScoped<IInMemoryUserRepository, InMemoryUserRepository>();
-
+            
             //Add Services
             var jwtOptions = configuration.GetSection("Jwt").Get<TokenService.Options>();
             services.AddScoped<ITokenService, TokenService>(_ => new TokenService(jwtOptions));
+            services.AddScoped<ILogMessageManager, LogMessageManager>();
+            services.AddScoped<ILogMessageService, LogMessageService>();
+            services.AddHttpClient("externalservice", client =>
+            {
+                client.BaseAddress = new Uri(configuration["ExternalUrl:BaseUrl"]);
+                client.DefaultRequestHeaders.Add("accept", "application/json");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", configuration["ExternalUrl:ApiKey"]);
+            }).AddPolicyHandler(GetRetryPolicy());
         }
+
         public static void AddSwagger(this IServiceCollection services)
         {
             // Register the Swagger generator, defining one or more Swagger documents
@@ -68,6 +83,14 @@ namespace Proxy.Web.Extensions
 
                 c.AddSecurityRequirement(securityRequirements);
             });
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
     }
 }

@@ -35,18 +35,19 @@ namespace Proxy.Web.Controllers
         {
             try
             {
+                user.Validate();
                 var validuser = _accountManager.ValidateUser(user.Username, user.Password);
                 var token = _tokenService.GenerateToken(validuser);
                 return token;
             }
             catch (ForbiddenException fbex)
             {
-                _logger.LogError("Operation is Forbidden: {message}", fbex.Message);
+                _logger.LogError($"Operation is Forbidden: {fbex.Message}");
                 return Forbid(fbex.Message);
             }
             catch (ApplicationException ex)
             {
-                _logger.LogError("Could not Authenticate: {message}", ex.Message);
+                _logger.LogError($"Could not Authenticate: { ex.Message}");
                 return BadRequest(ex.Message);
             }
         }
