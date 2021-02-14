@@ -11,20 +11,14 @@ namespace Proxy.Tests.ThirdPartyIntegrations
 {
     public class AirtableIntegrationTest
     {
-        private static HttpClient _client;
+        private HttpClient _client;
 
         [SetUp]
         public void OneTimeSetUp()
         {
-            var services = new ServiceCollection();
-            services.AddHttpClient("externalservice", client =>
-            {
-                client.BaseAddress = new Uri("https://api.airtable.com/v0/appD1b1YjWoXkUJwR/");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "key46INqjpp7lMzjd");
-            });
-
-            var factory = services.BuildServiceProvider().GetService<IHttpClientFactory>();
-            _client = factory.CreateClient("externalservice");
+            _client = new HttpClient();
+            _client.BaseAddress = new Uri("https://api.airtable.com/v0/appD1b1YjWoXkUJwR/");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "key46INqjpp7lMzjd");         
         }
 
         [TestCase("1", "Grid+view")]
